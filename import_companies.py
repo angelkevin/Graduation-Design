@@ -9,7 +9,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
 
 django.setup()
-with open('/myweb/static/stock_company.csv', 'r') as f:
+with open('/myweb/static/stock_company1.csv', 'r') as f:
     reader = csv.DictReader(f)
     for row in reader:
         company = Company(

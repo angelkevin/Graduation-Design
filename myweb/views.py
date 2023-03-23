@@ -33,7 +33,7 @@ def spider_data(request):
         page_number = 1
     page_obj = paginator.get_page(page_number)
     result = spider(page_number)
-    result = result.to_html(classes=None, index=False)
+    result = result.to_html(classes=None,render_links=True,escape=False,index=False)
     return render(request, "spider.html", {'result': result, 'page_obj': page_obj})
 
 

@@ -31,6 +31,9 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
 }
 
+def create_clickable_id(code):
+    url_template= '''<a href="../../search/?q={code}" >{code}</a>'''.format(code=code)
+    return url_template
 
 def spider(n):
     # time_stamp = time.time()
@@ -97,4 +100,6 @@ def spider(n):
                   '换手率',
                   '市盈率(动态)',
                   '市净率']
+    df['代码'] = df['代码'].apply(create_clickable_id)
     return df
+

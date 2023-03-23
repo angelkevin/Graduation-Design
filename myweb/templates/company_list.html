@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <title>公司列表</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +10,6 @@
 <body>
 <div class="search-container" style="float: right">
     <form method="get" action="/search/">
-        {% csrf_token %}
         <label>
             <input type="search" placeholder="输入股票代码" required name="q">
         </label>
