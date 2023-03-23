@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>报错啦</title>
+</head>
+<style>
+    p {
+        text-align: center;
+    }
+
+    #time {
+        color: red;
+    }
+</style>
+<body>
+<p>
+    <span id="time">5</span>秒后跳转到公司列表
+</p>
+
+<script>
+    var second = 5;
+    var time = document.getElementById("time");
+
+    function show() {
+        second--;
+        if (second == 0) {
+            location.href = "http://localhost:8000/index";
+        }
+        //用来动态设置里面的内容
+        time.innerHTML = second + "";
+
+    }
+
+    setInterval(show, 1000);
+
+
+</script>
+
+<h1>未收录该公司QAQ......数据正在努力💪完善中......</h1>
+<h2>🙅也有可能是您股票代码填写错误 🙅......确保无误后再414吧</h2>
+</body>
+</html>

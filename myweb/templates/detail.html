@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>上市公司信息</title>
+    <style>body {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #333;
+    }
+
+    a {
+        color: #007bff;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        margin-top: 30px;
+        margin-bottom: 1rem;
+
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    /* Layout Styles */
+    .company-container {
+        float: left;
+        max-width: 48%;
+    }
+
+    .company-info {
+        background-color: #fff;
+        padding: 30px;
+        margin-bottom: 30px;
+
+    }
+
+    .company-info h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .company-info p {
+        margin-bottom: 10px;
+    }
+
+    .company-info label {
+        font-weight: bold;
+    }
+
+    .company-info .website {
+        margin-bottom: 20px;
+    }
+
+    .company-info .employees span {
+        display: inline-block;
+        width: 100px;
+        text-align: right;
+        margin-right: 10px;
+    }
+
+    .company-info .website:before {
+        content: "";
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: #333;
+        border-radius: 50%;
+        margin-right: 5px;
+        margin-bottom: 2px;
+    }
+
+    .company-info p:last-child {
+        margin-bottom: 0;
+    }
+
+    .kline-item {
+        margin-top: 100px;
+        margin-left: 46%;
+
+    }
+
+    </style>
+</head>
+<body>
+
+
+<a href="javascript:history.back(-1)">返回上一页</a>
+<h1>公司详细信息</h1>
+
+<div class="company-container">
+    {% for company in companies %}
+        <div class="company-info">
+            <a href="{% url 'code' %}?id={{ company.ts_code }}" title="点击查看详细数据"><h2>{{ company.name }}</h2></a>
+            <p><label>股票代码：</label>{{ company.ts_code }}</p>
+            <p><label>所属行业：</label>{{ company.industry }}</p>
+            <p><label>全称：</label>{{ company.fullname }}</p>
+            <p><label>成立日期：</label>{{ company.setup_date }}</p>
+            <p><label>上市市场：</label>{{ company.market }}</p>
+            <p><label>上市日期：</label>{{ company.list_date }}</p>
+            <p><label>注册资本：</label>{{ company.reg_capital }}元</p>
+            <p><label>所在地：</label>{{ company.province }}/{{ company.city }}</p>
+            <p class="website"><label>网站：</label>{{ company.website }}</p>
+            <p><label>经营范围：</label>{{ company.business_scope }}</p>
+            <p><label>简介：</label>{{ company.introduction }}</p>
+        </div>
+
+    {% endfor %}
+</div>
+<div class="chart-item kline-item" id="kline">
+    {{ kline_html|safe }}
+
+</div>
+</body>
+</html>

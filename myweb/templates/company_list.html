@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>公司列表</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/company_list.css' %}">
+</head>
+<body>
+<div class="search-container" style="float: right">
+    <form method="get" action="/search/">
+        {% csrf_token %}
+        <label>
+            <input type="search" placeholder="输入股票代码" required name="q">
+        </label>
+        <button type="submit">搜索</button>
+    </form>
+</div>
+<a href="http://localhost:8000" title="点击查看实时数据"><h3>点击回到实时数据中心</h3></a>
+<h1>公司列表</h1>
+<div class="card-container">
+    {% for company in companies %}
+        <div class="card" onclick="">
+            <a href="{% url 'ts_code' %}?id={{ company.ts_code }}"><h2>{{ company.fullname }}</h2></a>
+            <p>{{ company.province }}/{{ company.city }}</p>
+        </div>
+    {% endfor %}
+</div>
+<div class="pagination-container">
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; 第一页</a>
+                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            <span class="current-page">
+            第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页。
+        </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 &raquo;</a>
+            {% endif %}
+    </span>
+    </div>
+
+</div>
+</body>
+
+</html>

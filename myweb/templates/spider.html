@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="10">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/my.css' %}">
+    <title>实时数据中心</title>
+    <style>
+
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .step-links a {
+            color: #333;
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+        }
+
+        .current-page {
+            color: #333;
+            display: inline-block;
+            padding: 8px 16px;
+        }
+
+        .step-links a:hover,
+        .step-links a:focus {
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+
+        .step-links .current-page {
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+<h1>沪深股票实时数据</h1>
+<a href="http://localhost:8000/index"><h2>点击查看公司信息</h2></a>
+{% autoescape off %}
+    {{ result }}
+{% endautoescape %}
+<div class="pagination-container">
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; 第一页</a>
+            <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+        {% endif %}
+
+        <span class="current-page">
+            第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页。
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">最后一页 &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+</div>
+</body>
+</html>

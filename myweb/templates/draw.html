@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/draw.css' %}">
+
+</head>
+<a href="javascript:history.back(-1)">返回上一页</a>
+<body>
+{% block content %}
+    <div class="chart-container">
+        <div class="chart-item kline-item" id="kline">
+            {{ kline_html|safe }}
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-item line-item" id="close-line">
+                {{ close_line_html|safe }}
+            </div>
+            <div class="chart-item line-item" id="open-line">
+                {{ open_line_html|safe }}
+            </div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-item line-item" id="low-line">
+                {{ low_line_html|safe }}
+            </div>
+            <div class="chart-item line-item" id="high-line">
+                {{ high_line_html|safe }}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>
