@@ -1,5 +1,5 @@
 import csv
-
+# -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
@@ -120,7 +120,7 @@ def draw(request):
 
 
 def company_list(request):
-    with open(r'myweb/static/stock_company.csv', 'r', encoding='utf-8') as f:
+    with open(r'myweb/static/stock_company.csv', 'r', encoding=' utf-8') as f:
         reader = csv.DictReader(f)
         companies_ = [row for row in reader]
     data = [i for i in range(int(len(companies_) / 40) + 1)]
@@ -137,7 +137,7 @@ def company_list(request):
 def search(request):
     result = []
     q = request.GET.get('q')
-    with open(r'myweb/static/stock_company.csv', 'r', encoding='utf-8') as f:
+    with open(r'myweb/static/stock_company.csv', 'r', encoding=' utf-8') as f:
         reader = csv.DictReader(f)
         companies_ = [row for row in reader]
     for i in companies_:
@@ -180,7 +180,8 @@ def search(request):
 def detail(request):
     result = []
     code = request.GET.get('id')
-    with open(r'myweb/static/stock_company.csv', 'r', encoding='utf-8') as f:
+    print(code)
+    with open(r'myweb/static/stock_company.csv', 'r', encoding=' utf-8') as f:
         reader = csv.DictReader(f)
         companies_ = [row for row in reader]
     for i in companies_:
