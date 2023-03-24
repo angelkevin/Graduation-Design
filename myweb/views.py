@@ -180,7 +180,6 @@ def search(request):
 def detail(request):
     result = []
     code = request.GET.get('id')
-    print(code)
     with open(r'myweb/static/stock_company.csv', 'r', encoding=' utf-8') as f:
         reader = csv.DictReader(f)
         companies_ = [row for row in reader]
