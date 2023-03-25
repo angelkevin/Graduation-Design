@@ -92,6 +92,10 @@
 
 <a href="javascript:history.back(-1)">返回上一页</a>
 <h1>公司详细信息</h1>
+{% for company in companies %}
+    <button type="button" onclick="window.location='{% url 'socket_code' %}?socket_code={{ company.ts_code }}'">点击按钮进行预测
+    </button>
+{% endfor %}
 
 <div class="company-container">
     {% for company in companies %}

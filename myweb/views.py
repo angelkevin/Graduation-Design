@@ -1,4 +1,7 @@
+import base64
 import csv
+import io
+
 # -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -15,6 +18,11 @@ import requests
 import random
 from random import randint
 
+from matplotlib import pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib_inline.backend_inline import FigureCanvas
+
+from myweb.py.predict import predict_code
 from myweb.py.spider import spider
 from myweb.py.kline import gpdata
 from pyecharts import options as opts
@@ -33,7 +41,7 @@ def spider_data(request):
         page_number = 1
     page_obj = paginator.get_page(page_number)
     result = spider(page_number)
-    result = result.to_html(classes=None,render_links=True,escape=False,index=False)
+    result = result.to_html(classes=None, render_links=True, escape=False, index=False)
     return render(request, "spider.html", {'result': result, 'page_obj': page_obj})
 
 
@@ -116,9 +124,6 @@ def draw(request):
     return render(request, 'draw.html', context)
 
 
-
-
-
 def company_list(request):
     with open(r'myweb/static/stock_company.csv', 'r', encoding=' utf-8') as f:
         reader = csv.DictReader(f)
@@ -144,7 +149,7 @@ def search(request):
         if str(q) in str(i.get('ts_code')):
             result.append(i)
 
-    if len(result)==0 or len(q) !=6:
+    if len(result) == 0 or len(q) != 6:
         return render(request, 'error_msg.html')
     code = result[0].get('ts_code')
     df = gpdata(code)
@@ -180,7 +185,6 @@ def search(request):
 def detail(request):
     result = []
     code = request.GET.get('id')
-    print(code)
     with open(r'myweb/static/stock_company.csv', 'r', encoding=' utf-8') as f:
         reader = csv.DictReader(f)
         companies_ = [row for row in reader]
@@ -215,3 +219,23 @@ def detail(request):
     )
     kline_html = kline.render_embed()
     return render(request, 'detail.html', {'companies': result, 'kline_html': kline_html})
+
+
+def predict(request):
+    param_value = request.GET.get('socket_code')
+    pred, actual = predict_code(param_value)
+    fig_size = plt.rcParams["figure.figsize"]
+    fig_size[0] = 15
+    fig_size[1] = 5
+    plt.rcParams["figure.figsize"] = fig_size
+    plt.grid(True)
+    plt.title("predict && actual")
+    plt.xticks([i for i in range(1,len(pred)+1)])
+    plt.autoscale(axis='x', tight=True)
+    predict_, = plt.plot(pred)
+    actual_, = plt.plot(actual)
+    plt.legend(handles=[predict_, actual_], labels=["predict", "actual"], loc="lower left", fontsize=15)
+    plt.savefig(f'myweb/static/img/predict.png')
+    plt.close()
+
+    return render(request, 'predict.html')
