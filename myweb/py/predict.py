@@ -12,7 +12,6 @@ from torch.utils.data import TensorDataset
 import torchvision.transforms as transforms
 from sklearn.model_selection import train_test_split
 import os
-import talib
 from sklearn.preprocessing import MinMaxScaler
 import tushare as ts
 

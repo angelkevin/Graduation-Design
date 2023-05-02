@@ -223,19 +223,24 @@ def detail(request):
 
 def predict(request):
     param_value = request.GET.get('socket_code')
-    pred, actual = predict_code(param_value)
-    fig_size = plt.rcParams["figure.figsize"]
-    fig_size[0] = 15
-    fig_size[1] = 5
-    plt.rcParams["figure.figsize"] = fig_size
-    plt.grid(True)
-    plt.title("predict && actual")
-    plt.xticks([i for i in range(1,len(pred)+1)])
-    plt.autoscale(axis='x', tight=True)
-    predict_, = plt.plot(pred)
-    actual_, = plt.plot(actual)
-    plt.legend(handles=[predict_, actual_], labels=["predict", "actual"], loc="lower left", fontsize=15)
-    plt.savefig(f'myweb/static/img/predict.png')
-    plt.close()
 
-    return render(request, 'predict.html')
+    try:
+
+        pred, actual = predict_code(param_value)
+        fig_size = plt.rcParams["figure.figsize"]
+        fig_size[0] = 15
+        fig_size[1] = 5
+        plt.rcParams["figure.figsize"] = fig_size
+        plt.grid(True)
+        plt.title("predict && actual")
+        plt.xticks([i for i in range(1, len(pred) + 1)])
+        plt.autoscale(axis='x', tight=True)
+        predict_, = plt.plot(pred)
+        actual_, = plt.plot(actual)
+        plt.legend(handles=[predict_, actual_], labels=["predict", "actual"], loc="lower left", fontsize=15)
+        plt.savefig(f'myweb/static/img/predict.png')
+        plt.close()
+
+        return render(request, 'predict.html')
+    except:
+        return render(request, 'error_msg.html')
