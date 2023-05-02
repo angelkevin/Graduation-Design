@@ -9,6 +9,9 @@
 <div>
     <a href="javascript:history.back(-1)">返回上一页</a>
 </div>
-<div><img src="{% static 'img/predict.png' %}" alt=""></div>
+<br>
+<h1>最后一个pred为下一个股票交易日的收盘价</h1>
+<br>
+<div>  {{ line_html|safe }}</div>
 </body>
 </html>

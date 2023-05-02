@@ -2,6 +2,7 @@ import base64
 import csv
 import io
 
+import torch
 # -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -21,12 +22,15 @@ from random import randint
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib_inline.backend_inline import FigureCanvas
+from pyecharts.globals import ThemeType
 
-from myweb.py.predict import predict_code
+from myweb.py.predict import predict_code, window_size
 from myweb.py.spider import spider
 from myweb.py.kline import gpdata
 from pyecharts import options as opts
 from pyecharts.charts import Kline, Line, Page
+
+from myweb.py.train import create_features, train, model
 
 
 # Create your views here.
@@ -227,20 +231,38 @@ def predict(request):
     try:
 
         pred, actual = predict_code(param_value)
-        fig_size = plt.rcParams["figure.figsize"]
-        fig_size[0] = 15
-        fig_size[1] = 5
-        plt.rcParams["figure.figsize"] = fig_size
-        plt.grid(True)
-        plt.title("predict && actual")
-        plt.xticks([i for i in range(1, len(pred) + 1)])
-        plt.autoscale(axis='x', tight=True)
-        predict_, = plt.plot(pred)
-        actual_, = plt.plot(actual)
-        plt.legend(handles=[predict_, actual_], labels=["predict", "actual"], loc="lower left", fontsize=15)
-        plt.savefig(f'myweb/static/img/predict.png')
-        plt.close()
+        line = (
+            Line(init_opts=opts.InitOpts(width="80%"))
+            .add_xaxis([i for i in range(len(pred))])
+            .add_yaxis("预测", ['{:.2f}'.format(j) for j in pred])
+            .add_yaxis("真实", ['{:.2f}'.format(k) for k in actual])
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+            .set_global_opts(
+                yaxis_opts=opts.AxisOpts(min_='dataMin'),
+                title_opts=opts.TitleOpts(title=f"股票{param_value[:6]}走势预测图", subtitle="仅供参考"))
+        )
 
-        return render(request, 'predict.html')
+        line_html = line.render_embed()
+        return render(request, 'predict.html', {'line_html': line_html})
+
     except:
-        return render(request, 'error_msg.html')
+        data = gpdata(param_value)  # 只需要在这里传入股票代码, example : 300857.SZ 然后下面就直接运行
+        data = data.sort_values(axis=0, by=['trade_date'], ascending=True).reset_index(drop=True)
+        train_data = create_features(data, window_size)  # 创建训练集
+        train(20, model, train_data)
+        torch.save(model, f'myweb/static/model/{param_value[:6]}.pt')  # 保存模型文件
+
+        pred, actual = predict_code(param_value)
+        line = (
+            Line(init_opts=opts.InitOpts(width="80%"))
+            .add_xaxis([i for i in range(len(pred))])
+            .add_yaxis("预测", ['{:.2f}'.format(j) for j in pred])
+            .add_yaxis("真实", ['{:.2f}'.format(k) for k in actual])
+            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+            .set_global_opts(
+                yaxis_opts=opts.AxisOpts(min_='dataMin'),
+                title_opts=opts.TitleOpts(title= f"股票{param_value[:6]}走势预测图",subtitle="仅供参考"))
+        )
+
+        line_html = line.render_embed()
+        return render(request, 'predict.html', {'line_html': line_html})
